@@ -14,10 +14,10 @@ def load_url(url):
 
 def retrieve_locations():
     soup = load_url(ALL_CLASS_URL)
-    tables = soup.findAll('table', attrs={'class': 'class-table'})
+    tables = soup.find_all('table', attrs={'class': 'class-table'})
     ret = {}
     for table in tables:
-        for row in table.findAll('tr'):
+        for row in table.find_all('tr'):
             if not row.text:
                 continue
             link = row.find('a')
@@ -39,7 +39,7 @@ def class_list(url):
 
     tables = soup.find_all('table', attrs={'class': 'ox_table'})
     for table in tables:
-        header_cells = table.find('thead').findAll('th')
+        header_cells = table.find('thead').find_all('th')
         levels = [
             cell.text
             for cell in header_cells
@@ -48,11 +48,11 @@ def class_list(url):
         body = table.find('tbody')
         if not body:
             break
-        body_rows = body.findAll('tr')
+        body_rows = body.find_all('tr')
         for row in body_rows:
             if not row:
                 continue
-            row = row.findAll('td')
+            row = row.find_all('td')
 
             date = row[0]
             if re.match('.*Teacher.*', header_cells[1].text):
