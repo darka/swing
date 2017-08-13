@@ -19,12 +19,12 @@ def print_classes(classes):
         for date, level, contents in ls:
             parsed_date = dateparser.parse(fix_date_hack(date), settings={'DATE_ORDER': 'DMY'})
             if not parsed_date:
-                print(u'{}: failed to parse date: {}'.format(location, date.decode('utf-8').strip()), file=sys.stderr)
+                print(u'{}: failed to parse date: {}'.format(location, date), file=sys.stderr)
                 continue
             location_classes.append((location, parsed_date.date(), level, contents))
 
     for location, date, level, contents in sorted(location_classes, key=lambda x: x[1]):
-        print('{} {} ({}) {}'.format(date, contents, level, location))
+        print('{} {} ({}) {}'.format(*[s.encode('utf-8') for s in str(date), contents, level, location]))
 
 def main():
     if len(sys.argv) != 2:
