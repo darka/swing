@@ -10,7 +10,7 @@ CLASS_DUMP_FILENAME = 'classes.dump'
 def load_url(url):
     response = requests.get(url)
     html = response.content
-    return BeautifulSoup(html, 'html.parser')
+    return BeautifulSoup(html, 'html5lib')
 
 def retrieve_locations():
     soup = load_url(ALL_CLASS_URL)
