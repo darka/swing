@@ -20,8 +20,9 @@ def retrieve_locations():
         for row in table.find_all('tr'):
             if not row.text:
                 continue
-            link = row.find('a')
-            ret[link.text] = link['href']
+            anchor = row.find('a')
+            if anchor:
+                ret[anchor.text] = anchor['href']
     return ret
 
 def find_class_plan(url):
