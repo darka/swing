@@ -33,7 +33,6 @@ def find_class_plan(url):
     return class_plan_anchor['href']
 
 def class_list(url):
-    print('retrieving: {}'.format(url))
     soup = load_url(url)
 
     ret = []
@@ -51,29 +50,33 @@ def class_list(url):
             break
         body_rows = body.find_all('tr')
         for row in body_rows:
-            if not row:
+            cells = row.find_all('td')
+            if not cells:
                 continue
-            row = row.find_all('td')
 
-            date = row[0]
+            date = cells[0]
             if re.match('.*Teacher.*', header_cells[1].text):
                 class_column_start_index = 2
             else:
                 class_column_start_index = 1
 
-            for i, class_contents in enumerate(row[class_column_start_index:]):
+            for i, class_contents in enumerate(cells[class_column_start_index:]):
                 ret.append([text.strip() for text in (date.text, levels[i], class_contents.text)])
     return ret
 
 def dump_classes():
     locations = retrieve_locations()
+    print('found: {} locations'.format(len(locations)))
     extracted_data = {}
     for location, url in locations.iteritems():
+        print('retrieving: {}'.format(url))
         url = find_class_plan(url)
         if url:
             classes = class_list(url)
+            print('found: {} classes'.format(len(classes)))
             extracted_data[location] = classes
         else:
+            print('no class plan')
             extracted_data[location] = None
     print('dumping to: {}'.format(CLASS_DUMP_FILENAME))
     pickle.dump(extracted_data, open(CLASS_DUMP_FILENAME, 'w'))
